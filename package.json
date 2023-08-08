@@ -4,7 +4,7 @@
   "description": "Binary Mac OS X Plist (property list) creator.",
   "main": "bplistCreator.js",
   "scripts": {
-    "test": "./node_modules/nodeunit/bin/nodeunit test"
+    "test": "mocha test"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
   "devDependencies": {
     "bplist-parser": "0.3.0",
     "is-buffer": "1.1.x",
-    "nodeunit": "0.9.x"
+    "mocha": "10.0.x"
   },
   "dependencies": {
     "stream-buffers": "2.2.x"

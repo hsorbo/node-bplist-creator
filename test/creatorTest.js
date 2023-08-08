@@ -1,149 +1,139 @@
 'use strict';
 
-var fs = require('fs');
+var fs = require('fs').promises;
 var path = require('path');
-var nodeunit = require('nodeunit');
 var bplistParser = require('bplist-parser');
 var bplistCreator = require('../');
+const assert = require('assert');
 
-module.exports = {
-//  'iTunes Small': function(test) {
-//    var file = path.join(__dirname, "iTunes-small.bplist");
-//    testFile(test, file);
-//  },
+describe('bplist-creator', async function () {
+  //  'iTunes Small': function(test) {
+  //    var file = path.join(__dirname, "iTunes-small.bplist");
+  //    testFile(test, file);
+  //  },
 
-  'sample1': function(test) {
+  it('sample1', async function () {
     var file = path.join(__dirname, "sample1.bplist");
-    testFile(test, file);
-  },
-
-  'sample2': function(test) {
-    var file = path.join(__dirname, "sample2.bplist");
-    testFile(test, file);
-  },
-
-  'binary data': function(test) {
-    var file = path.join(__dirname, "binaryData.bplist");
-    testFile(test, file);
-  },
-
-  'airplay': function(test) {
-    var file = path.join(__dirname, "airplay.bplist");
-    testFile(test, file);
-  },
-
-  'integers': function(test) {
-    var file = path.join(__dirname, "integers.bplist");
-    testFile(test, file);
-  },
-
-//  'utf16': function(test) {
-//    var file = path.join(__dirname, "utf16.bplist");
-//    testFile(test, file);
-//  },
-
-//  'uid': function(test) {
-//    var file = path.join(__dirname, "uid.bplist");
-//    testFile(test, file);
-//  }
-};
-
-function testFile(test, file) {
-  fs.readFile(file, function(err, fileData) {
-    if (err) {
-      return test.done(err);
-    }
-
-    bplistParser.parseFile(file, function(err, dicts) {
-      if (err) {
-        return test.done(err);
-      }
-
-      // airplay overrides
-      if (dicts && dicts[0] && dicts[0].loadedTimeRanges && dicts[0].loadedTimeRanges[0] && dicts[0].loadedTimeRanges[0].hasOwnProperty('start')) {
-        dicts[0].loadedTimeRanges[0].start = {
-          bplistOverride: true,
-          type: 'double',
-          value: dicts[0].loadedTimeRanges[0].start
-        };
-      }
-      if (dicts && dicts[0] && dicts[0].loadedTimeRanges && dicts[0].seekableTimeRanges[0] && dicts[0].seekableTimeRanges[0].hasOwnProperty('start')) {
-        dicts[0].seekableTimeRanges[0].start = {
-          bplistOverride: true,
-          type: 'double',
-          value: dicts[0].seekableTimeRanges[0].start
-        };
-      }
-      if (dicts && dicts[0] && dicts[0].hasOwnProperty('rate')) {
-        dicts[0].rate = {
-          bplistOverride: true,
-          type: 'double',
-          value: dicts[0].rate
-        };
-      }
-
-      // utf16
-      if (dicts && dicts[0] && dicts[0].hasOwnProperty('NSHumanReadableCopyright')) {
-        dicts[0].NSHumanReadableCopyright = {
-          bplistOverride: true,
-          type: 'string-utf16',
-          value: dicts[0].NSHumanReadableCopyright
-        };
-      }
-      if (dicts && dicts[0] && dicts[0].hasOwnProperty('CFBundleExecutable')) {
-        dicts[0].CFBundleExecutable = {
-          bplistOverride: true,
-          type: 'string',
-          value: dicts[0].CFBundleExecutable
-        };
-      }
-      if (dicts && dicts[0] && dicts[0].CFBundleURLTypes && dicts[0].CFBundleURLTypes[0] && dicts[0].CFBundleURLTypes[0].hasOwnProperty('CFBundleURLSchemes')) {
-        dicts[0].CFBundleURLTypes[0].CFBundleURLSchemes[0] = {
-          bplistOverride: true,
-          type: 'string',
-          value: dicts[0].CFBundleURLTypes[0].CFBundleURLSchemes[0]
-        };
-      }
-      if (dicts && dicts[0] && dicts[0].hasOwnProperty('CFBundleDisplayName')) {
-        dicts[0].CFBundleDisplayName = {
-          bplistOverride: true,
-          type: 'string',
-          value: dicts[0].CFBundleDisplayName
-        };
-      }
-      if (dicts && dicts[0] && dicts[0].hasOwnProperty('DTPlatformBuild')) {
-        dicts[0].DTPlatformBuild = {
-          bplistOverride: true,
-          type: 'string',
-          value: dicts[0].DTPlatformBuild
-        };
-      }
-
-      // integer
-      if (dicts && dicts[0] && dicts[0].hasOwnProperty('int64item')) {
-        dicts[0].int64item = {
-          bplistOverride: true,
-          type: 'number',
-          value: dicts[0].int64item.value
-        };
-      }
-
-      var buf = bplistCreator(dicts);
-      compareBuffers(test, buf, fileData);
-      return test.done();
-    });
+    await testFile(file);
   });
+
+  it('sample2', async function () {
+    var file = path.join(__dirname, "sample2.bplist");
+    await testFile(file);
+  });
+
+  it('binary data', async function () {
+    var file = path.join(__dirname, "binaryData.bplist");
+    await testFile(file);
+  });
+
+  it('airplay', async function () {
+    var file = path.join(__dirname, "airplay.bplist");
+    await testFile(file);
+  });
+
+  it('integers', async function () {
+    var file = path.join(__dirname, "integers.bplist");
+    await testFile(file);
+  });
+
+  //  'utf16': function(test) {
+  //    var file = path.join(__dirname, "utf16.bplist");
+  //    testFile(test, file);
+  //  },
+
+  //  'uid': function(test) {
+  //    var file = path.join(__dirname, "uid.bplist");
+  //    testFile(test, file);
+  //  }
+});
+
+async function testFile (file) {
+  const fileData = await fs.readFile(file);
+  const dicts = await bplistParser.parseFile(file);
+ 
+  // airplay overrides
+  if (dicts && dicts[0] && dicts[0].loadedTimeRanges && dicts[0].loadedTimeRanges[0] && dicts[0].loadedTimeRanges[0].hasOwnProperty('start')) {
+    dicts[0].loadedTimeRanges[0].start = {
+      bplistOverride: true,
+      type: 'double',
+      value: dicts[0].loadedTimeRanges[0].start
+    };
+  }
+  if (dicts && dicts[0] && dicts[0].loadedTimeRanges && dicts[0].seekableTimeRanges[0] && dicts[0].seekableTimeRanges[0].hasOwnProperty('start')) {
+    dicts[0].seekableTimeRanges[0].start = {
+      bplistOverride: true,
+      type: 'double',
+      value: dicts[0].seekableTimeRanges[0].start
+    };
+  }
+  if (dicts && dicts[0] && dicts[0].hasOwnProperty('rate')) {
+    dicts[0].rate = {
+      bplistOverride: true,
+      type: 'double',
+      value: dicts[0].rate
+    };
+  }
+
+  // utf16
+  if (dicts && dicts[0] && dicts[0].hasOwnProperty('NSHumanReadableCopyright')) {
+    dicts[0].NSHumanReadableCopyright = {
+      bplistOverride: true,
+      type: 'string-utf16',
+      value: dicts[0].NSHumanReadableCopyright
+    };
+  }
+  if (dicts && dicts[0] && dicts[0].hasOwnProperty('CFBundleExecutable')) {
+    dicts[0].CFBundleExecutable = {
+      bplistOverride: true,
+      type: 'string',
+      value: dicts[0].CFBundleExecutable
+    };
+  }
+  if (dicts && dicts[0] && dicts[0].CFBundleURLTypes && dicts[0].CFBundleURLTypes[0] && dicts[0].CFBundleURLTypes[0].hasOwnProperty('CFBundleURLSchemes')) {
+    dicts[0].CFBundleURLTypes[0].CFBundleURLSchemes[0] = {
+      bplistOverride: true,
+      type: 'string',
+      value: dicts[0].CFBundleURLTypes[0].CFBundleURLSchemes[0]
+    };
+  }
+  if (dicts && dicts[0] && dicts[0].hasOwnProperty('CFBundleDisplayName')) {
+    dicts[0].CFBundleDisplayName = {
+      bplistOverride: true,
+      type: 'string',
+      value: dicts[0].CFBundleDisplayName
+    };
+  }
+  if (dicts && dicts[0] && dicts[0].hasOwnProperty('DTPlatformBuild')) {
+    dicts[0].DTPlatformBuild = {
+      bplistOverride: true,
+      type: 'string',
+      value: dicts[0].DTPlatformBuild
+    };
+  }
+
+  // integer
+  if (dicts && dicts[0] && dicts[0].hasOwnProperty('int64item')) {
+    dicts[0].int64item = {
+      bplistOverride: true,
+      type: 'number',
+      value: dicts[0].int64item.value
+    };
+  }
+
+  var buf = bplistCreator(dicts);
+  compareBuffers(buf, fileData);
 }
 
-function compareBuffers(test, buf1, buf2) {
+function compareBuffers(buf1, buf2) {
   if (buf1.length !== buf2.length) {
     printBuffers(buf1, buf2);
-    return test.fail("buffer size mismatch. found: " + buf1.length + ", expected: " + buf2.length + ".");
+    return assert.fail("buffer size mismatch. found: " + buf1.length + ", expected: " + buf2.length + ".");
   }
   for (var i = 0; i < buf1.length; i++) {
     if (buf1[i] !== buf2[i]) {
       printBuffers(buf1, buf2);
-      return test.fail("buffer mismatch at offset 0x" + i.toString(16) + ". found: 0x" + buf1[i].toString(16) + ", expected: 0x" + buf2[i].toString(16) + ".");
+      return assert.fail("buffer mismatch at offset 0x" + i.toString(16) + ". found: 0x" + buf1[i].toString(16) + ", expected: 0x" + buf2[i].toString(16) + ".");
     }
   }
 }
