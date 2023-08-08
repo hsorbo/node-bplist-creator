@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "Binary Mac OS X Plist (property list) creator.",
   "main": "bplistCreator.js",
+  "type": "module",
   "scripts": {
     "test": "mocha test"
   },
