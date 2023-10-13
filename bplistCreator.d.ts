@@ -5,3 +5,5 @@ declare module "bplist-creator" {
 
   export const BPlistCreator: BPlistCreator;
 }
+
+export default BPlistCreator;
