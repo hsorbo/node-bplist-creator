@@ -2,7 +2,7 @@
 
 // adapted from http://code.google.com/p/plist/source/browse/trunk/src/main/java/com/dd/plist/BinaryPropertyListWriter.java
 
-import * as streamBuffers from "stream-buffers";
+import * as streamBuffers from "stream-buffers-es";
 
 var debug = false;
 

@@ -23,6 +23,6 @@
     "mocha": "10.0.x"
   },
   "dependencies": {
-    "stream-buffers": "git://github.com/hsorbo/node-stream-buffer#esm"
+    "stream-buffers-es": "^0.0.1"
   }
 }
