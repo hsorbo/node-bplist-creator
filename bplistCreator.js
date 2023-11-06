@@ -2,15 +2,15 @@
 
 // adapted from http://code.google.com/p/plist/source/browse/trunk/src/main/java/com/dd/plist/BinaryPropertyListWriter.java
 
-var streamBuffers = require("stream-buffers");
+import * as streamBuffers from "stream-buffers-es";
 
 var debug = false;
 
-function Real(value) {
+export function Real(value) {
   this.value = value;
 }
 
-module.exports = function(dicts) {
+export default function(dicts) {
   var buffer = new streamBuffers.WritableStreamBuffer();
   buffer.write(Buffer.from("bplist00"));
 
@@ -456,5 +456,3 @@ function computeIdSizeInBytes(numberOfIds) {
   }
   return 4;
 }
-
-module.exports.Real = Real;

@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "Binary Mac OS X Plist (property list) creator.",
   "main": "bplistCreator.js",
+  "type": "module",
   "scripts": {
     "test": "mocha test"
   },
@@ -18,11 +19,10 @@
   "author": "Joe Ferner",
   "license": "MIT",
   "devDependencies": {
-    "bplist-parser": "0.3.0",
-    "is-buffer": "1.1.x",
+    "bplist-parser": "git://github.com/joeferner/node-bplist-parser#551c7fb",
     "mocha": "10.0.x"
   },
   "dependencies": {
-    "stream-buffers": "2.2.x"
+    "stream-buffers-es": "^0.0.1"
   }
 }

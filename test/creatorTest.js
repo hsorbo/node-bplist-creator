@@ -1,49 +1,51 @@
 'use strict';
 
-var fs = require('fs').promises;
-var path = require('path');
-var bplistParser = require('bplist-parser');
-var bplistCreator = require('../');
-const assert = require('assert');
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import * as bplistParser from 'bplist-parser';
+import bplistCreator from '../bplistCreator.js';
+import * as assert from 'assert';
+
+const dirname = path.dirname(new URL(import.meta.url).pathname);
 
 describe('bplist-creator', async function () {
   //  'iTunes Small': function(test) {
-  //    var file = path.join(__dirname, "iTunes-small.bplist");
+  //    var file = path.join(dirname, "iTunes-small.bplist");
   //    testFile(test, file);
   //  },
 
   it('sample1', async function () {
-    var file = path.join(__dirname, "sample1.bplist");
+    var file = path.join(dirname, "sample1.bplist");
     await testFile(file);
   });
 
   it('sample2', async function () {
-    var file = path.join(__dirname, "sample2.bplist");
+    var file = path.join(dirname, "sample2.bplist");
     await testFile(file);
   });
 
   it('binary data', async function () {
-    var file = path.join(__dirname, "binaryData.bplist");
+    var file = path.join(dirname, "binaryData.bplist");
     await testFile(file);
   });
 
   it('airplay', async function () {
-    var file = path.join(__dirname, "airplay.bplist");
+    var file = path.join(dirname, "airplay.bplist");
     await testFile(file);
   });
 
   it('integers', async function () {
-    var file = path.join(__dirname, "integers.bplist");
+    var file = path.join(dirname, "integers.bplist");
     await testFile(file);
   });
 
   //  'utf16': function(test) {
-  //    var file = path.join(__dirname, "utf16.bplist");
+  //    var file = path.join(dirname, "utf16.bplist");
   //    testFile(test, file);
   //  },
 
   //  'uid': function(test) {
-  //    var file = path.join(__dirname, "uid.bplist");
+  //    var file = path.join(dirname, "uid.bplist");
   //    testFile(test, file);
   //  }
 });

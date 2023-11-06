@@ -3,6 +3,7 @@ declare module "bplist-creator" {
 
   type BPlistCreator = (object: PlistJsObj) => Buffer;
 
-  const BPlistCreator: BPlistCreator;
-  export = BPlistCreator;
+  export const BPlistCreator: BPlistCreator;
 }
+
+export default BPlistCreator;
